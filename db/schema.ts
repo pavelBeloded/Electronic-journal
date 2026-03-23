@@ -57,6 +57,8 @@ export const subjects = pgTable("subjects", {
 export const scheduleEntries = pgTable("schedule_entries", {
   id: uuid("id").defaultRandom().primaryKey(),
 
+  type: text("type"),
+
   groupId: uuid("group_id")
     .notNull()
     .references(() => groups.id, { onDelete: "cascade" }),
