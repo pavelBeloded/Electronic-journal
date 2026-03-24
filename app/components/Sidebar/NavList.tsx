@@ -22,7 +22,7 @@ const links: LinkType[] = [
   },
 ];
 
-export function NavList() {
+export function NavList({ onClick }: { onClick: () => void }) {
   const pathname = usePathname();
 
   return (
@@ -38,6 +38,7 @@ export function NavList() {
             <li key={link.href}>
               <Link
                 href={link.href}
+                onClick={onClick}
                 className={[
                   "flex items-center gap-3 rounded-md px-4 py-2 transition-all duration-200",
                   isActive

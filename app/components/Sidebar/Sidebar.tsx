@@ -1,13 +1,26 @@
+"use client";
+
 import { LogOut } from "lucide-react";
 import { NavList } from "@/app/components/Sidebar/NavList";
+import { useState } from "react";
 
-export function Sidebar({ className }: { className: string }) {
+export function Sidebar({
+  className,
+  open,
+  setOpenAction,
+}: {
+  className?: string;
+  open: boolean;
+  setOpenAction: (open: boolean) => void;
+}) {
   return (
     <aside
-      className={
-        "fixed flex flex-col left-0 top-0 h-screen bg-surface-container-low border-r border-outline-variant px-4 py-6 " +
-        className
-      }
+      className={[
+        "fixed left-0 top-0 z-50 flex h-screen w-68 flex-col border-r border-outline-variant bg-surface-container-low px-4 py-6 transition-transform duration-300 ease-in-out",
+        open ? "translate-x-0" : "-translate-x-full",
+        "md:translate-x-0",
+        className,
+      ].join(" ")}
     >
       <section className="mb-10 px-4">
         <div className="text-left">
@@ -18,7 +31,7 @@ export function Sidebar({ className }: { className: string }) {
         </div>
       </section>
       <section>
-        <NavList />
+        <NavList onClick={() => setOpenAction(false)} />
       </section>
       <section className="mt-auto pt-6">
         <button className="flex w-full items-center gap-3 rounded-md px-4 py-2 text-on-surface-variant transition-all duration-200 hover:bg-surface-container hover:text-on-surface">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Manrope } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/app/components/Sidebar/Sidebar";
+import SidebarWrapper from "@/app/components/Sidebar/SidebarWrapper";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -26,8 +27,8 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${manrope.variable} bg-surface text-on-surface antialiased`}
       >
-        <Sidebar className="w-68" />
-        <div className="ml-68">{children}</div>
+        <SidebarWrapper />
+        <main className="ml-0 min-h-screen md:ml-68">{children}</main>
       </body>
     </html>
   );
