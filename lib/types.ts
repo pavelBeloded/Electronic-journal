@@ -13,3 +13,9 @@ export interface ScheduleEntry {
   subjectName: string;
   groupName: string;
 }
+
+export interface LinkType {
+  href: string;
+  title: string;
+  icon: React.ComponentType<{ className?: string }>;
+}

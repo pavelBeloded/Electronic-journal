@@ -1,26 +1,260 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Base */
+  --background: #0c0e11;
+  --surface: #0c0e11;
+  --surface-dim: #0a0c0f;
+  --surface-bright: #252d36;
+
+  /* Surface containers */
+  --surface-container-lowest: #07090c;
+  --surface-container-low: #111418;
+  --surface-container: #161a1f;
+  --surface-container-high: #1b2027;
+  --surface-container-highest: #20262e;
+  --surface-variant: #20262e;
+
+  /* Text */
+  --on-background: #e0e6f1;
+  --on-surface: #e0e6f1;
+  --on-surface-variant: #9aa3b2;
+
+  /* Primary / accent */
+  --primary: #8ab4ff;
+  --primary-dim: #6f96df;
+  --primary-container: #1e2d45;
+  --primary-fixed: #b7d0ff;
+  --primary-fixed-dim: #8ab4ff;
+  --on-primary: #08111f;
+  --on-primary-container: #d7e5ff;
+  --on-primary-fixed: #08111f;
+  --on-primary-fixed-variant: #20324f;
+
+  /* Secondary */
+  --secondary: #9aa3b2;
+  --secondary-dim: #7f8897;
+  --secondary-container: #2a313c;
+  --secondary-fixed: #c6d0e0;
+  --secondary-fixed-dim: #aeb8c8;
+  --on-secondary: #0f1722;
+  --on-secondary-container: #dbe4f3;
+  --on-secondary-fixed: #0f1722;
+  --on-secondary-fixed-variant: #344154;
+
+  /* Tertiary */
+  --tertiary: #c7b8ff;
+  --tertiary-dim: #ab99eb;
+  --tertiary-container: #33294b;
+  --tertiary-fixed: #ddd2ff;
+  --tertiary-fixed-dim: #c7b8ff;
+  --on-tertiary: #120d1f;
+  --on-tertiary-container: #eee8ff;
+  --on-tertiary-fixed: #120d1f;
+  --on-tertiary-fixed-variant: #40345c;
+
+  /* Borders / outlines */
+  --outline: #5b6574;
+  --outline-variant: #2a313c;
+
+  /* Status */
+  --error: #ff8a80;
+  --error-dim: #d96a61;
+  --error-container: #5a2220;
+  --on-error: #220607;
+  --on-error-container: #ffd2cd;
+
+  /* Misc */
+  --inverse-surface: #eef2f8;
+  --inverse-on-surface: #1a1f26;
+  --inverse-primary: #335d99;
+  --surface-tint: #8ab4ff;
+
+  /* Sidebar helpers */
+  --sidebar: #0f1318;
+  --sidebar-foreground: #e0e6f1;
+  --sidebar-border: #222933;
+  --sidebar-accent: #1a2230;
+
+  /* Semantic badges for schedule types */
+  --lecture: #8ab4ff;
+  --practice: #7bd88f;
+  --lab: #b69cff;
+  --seminar: #f2c572;
+
+  /* Radius */
+  --radius: 12px;
 }
 
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface: var(--surface);
+  --color-surface-dim: var(--surface-dim);
+  --color-surface-bright: var(--surface-bright);
+
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --color-surface-variant: var(--surface-variant);
+
+  --color-on-background: var(--on-background);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+
+  --color-primary: var(--primary);
+  --color-primary-dim: var(--primary-dim);
+  --color-primary-container: var(--primary-container);
+  --color-primary-fixed: var(--primary-fixed);
+  --color-primary-fixed-dim: var(--primary-fixed-dim);
+  --color-on-primary: var(--on-primary);
+  --color-on-primary-container: var(--on-primary-container);
+  --color-on-primary-fixed: var(--on-primary-fixed);
+  --color-on-primary-fixed-variant: var(--on-primary-fixed-variant);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-dim: var(--secondary-dim);
+  --color-secondary-container: var(--secondary-container);
+  --color-secondary-fixed: var(--secondary-fixed);
+  --color-secondary-fixed-dim: var(--secondary-fixed-dim);
+  --color-on-secondary: var(--on-secondary);
+  --color-on-secondary-container: var(--on-secondary-container);
+  --color-on-secondary-fixed: var(--on-secondary-fixed);
+  --color-on-secondary-fixed-variant: var(--on-secondary-fixed-variant);
+
+  --color-tertiary: var(--tertiary);
+  --color-tertiary-dim: var(--tertiary-dim);
+  --color-tertiary-container: var(--tertiary-container);
+  --color-tertiary-fixed: var(--tertiary-fixed);
+  --color-tertiary-fixed-dim: var(--tertiary-fixed-dim);
+  --color-on-tertiary: var(--on-tertiary);
+  --color-on-tertiary-container: var(--on-tertiary-container);
+  --color-on-tertiary-fixed: var(--on-tertiary-fixed);
+  --color-on-tertiary-fixed-variant: var(--on-tertiary-fixed-variant);
+
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
+
+  --color-error: var(--error);
+  --color-error-dim: var(--error-dim);
+  --color-error-container: var(--error-container);
+  --color-on-error: var(--on-error);
+  --color-on-error-container: var(--on-error-container);
+
+  --color-inverse-surface: var(--inverse-surface);
+  --color-inverse-on-surface: var(--inverse-on-surface);
+  --color-inverse-primary: var(--inverse-primary);
+  --color-surface-tint: var(--surface-tint);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent: var(--sidebar-accent);
+
+  --color-lecture: var(--lecture);
+  --color-practice: var(--practice);
+  --color-lab: var(--lab);
+  --color-seminar: var(--seminar);
+
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --font-headline: "Manrope", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-label: "Inter", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-outline-variant;
+  }
+
+  html {
+    color-scheme: dark;
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-surface text-on-surface min-h-screen font-body;
+    background-image:
+            linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+    background-size: 80px 80px;
+    background-position: top left;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--primary) 28%, transparent);
+    color: var(--on-surface);
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  input,
+  select,
+  textarea {
+    @apply bg-surface-container text-on-surface border border-outline-variant;
+  }
+
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 35%, transparent);
+  }
+
+  hr {
+    @apply border-outline-variant;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Material Symbols default tuning */
+.material-symbols-outlined {
+  font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+}
+
+/* Shared press feedback */
+.scale-98-on-click:active {
+  transform: scale(0.98);
+}
+
+/* Optional utility from your mockup */
+.tonal-stacking-no-borders {
+  border: none !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a313c;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3a4452;
 }
