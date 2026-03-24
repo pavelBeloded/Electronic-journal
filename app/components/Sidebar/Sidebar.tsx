@@ -1,9 +1,14 @@
 import { LogOut } from "lucide-react";
 import { NavList } from "@/app/components/Sidebar/NavList";
 
-export function Sidebar() {
+export function Sidebar({ className }: { className: string }) {
   return (
-    <aside className="fixed flex flex-col left-0 top-0 h-screen w-68 bg-surface-container-low border-r border-outline-variant px-4 py-6">
+    <aside
+      className={
+        "fixed flex flex-col left-0 top-0 h-screen bg-surface-container-low border-r border-outline-variant px-4 py-6 " +
+        className
+      }
+    >
       <section className="mb-10 px-4">
         <div className="text-left">
           <p className="font-headline text-2xl text-on-surface font-bold">

@@ -26,8 +26,8 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${manrope.variable} bg-surface text-on-surface antialiased`}
       >
-        <Sidebar />
-        {children}
+        <Sidebar className="w-68" />
+        <div className="ml-68">{children}</div>
       </body>
     </html>
   );
