@@ -2,8 +2,13 @@ import { SubgroupType, WeekType } from "@/lib/types";
 import { db } from "@/db";
 import { groups, scheduleEntries, subjects } from "@/db/schema";
 import { and, asc, eq, or, SQL } from "drizzle-orm";
+import { cacheLife, cacheTag } from "next/cache";
 
 export async function getSchedule(weekType: WeekType, subgroup: SubgroupType) {
+  "use cache";
+  console.log("DB QUERY!!!!");
+  cacheLife("max");
+  cacheTag("schedule-data");
   const filters: SQL[] = [];
 
   if (subgroup === "1" || subgroup === "2") {
