@@ -73,8 +73,8 @@ export const scheduleEntries = pgTable("schedule_entries", {
   weekType: weekTypeEnum("week_type").notNull().default("all"),
   subgroup: subgroupEnum("subgroup").notNull().default("all"),
 
-  startTime: time("start_time"),
-  endTime: time("end_time"),
+  startTime: time("start_time").notNull(),
+  endTime: time("end_time").notNull(),
 
   room: text("room"),
 

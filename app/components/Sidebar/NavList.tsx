@@ -31,9 +31,6 @@ export function NavList({ onClick }: { onClick: () => void }) {
         {links.map((link) => {
           const isActive =
             pathname === "/" ? link.href === "/" : pathname === link.href;
-          console.log(pathname);
-          console.log(isActive);
-          console.log(link.href);
           return (
             <li key={link.href}>
               <Link

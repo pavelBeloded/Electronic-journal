@@ -1,5 +1,7 @@
 export type WeekType = "odd" | "even" | "all";
 
+export type SubgroupType = "1" | "2" | "all";
+
 export interface ScheduleEntry {
   id: string;
   type: string | null;
@@ -7,8 +9,8 @@ export interface ScheduleEntry {
   lessonNumber: number;
   weekType: "odd" | "even" | "all";
   subgroup: "1" | "all" | "2";
-  startTime: string | null;
-  endTime: string | null;
+  startTime: string;
+  endTime: string;
   room: string | null;
   subjectName: string;
   groupName: string;

@@ -2,7 +2,6 @@
 
 import { LogOut } from "lucide-react";
 import { NavList } from "@/app/components/Sidebar/NavList";
-import { useState } from "react";
 
 export function Sidebar({
   className,

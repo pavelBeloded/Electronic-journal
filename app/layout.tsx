@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Manrope } from "next/font/google";
 import "./globals.css";
-import { Sidebar } from "@/app/components/Sidebar/Sidebar";
 import SidebarWrapper from "@/app/components/Sidebar/SidebarWrapper";
+import { ReactNode } from "react";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="ru" className="dark">
       <body

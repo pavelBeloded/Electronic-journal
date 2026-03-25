@@ -1,10 +1,19 @@
-import { WeekType } from "@/lib/types";
+import { SubgroupType, WeekType } from "@/lib/types";
 import { db } from "@/db";
 import { groups, scheduleEntries, subjects } from "@/db/schema";
 import { and, asc, eq, or, SQL } from "drizzle-orm";
 
-export async function getSchedule(weekType: WeekType) {
+export async function getSchedule(weekType: WeekType, subgroup: SubgroupType) {
   const filters: SQL[] = [];
+
+  if (subgroup === "1" || subgroup === "2") {
+    filters.push(
+      or(
+        eq(scheduleEntries.subgroup, subgroup),
+        eq(scheduleEntries.subgroup, "all"),
+      )!,
+    );
+  }
 
   if (weekType === "odd" || weekType === "even") {
     filters.push(

@@ -1,13 +1,14 @@
 import { ScheduleEntry, WeekType } from "@/lib/types";
 import { getSchedule } from "@/lib/dal";
+import { MapPin } from "lucide-react";
 
 const weekdays = [
-  { label: "понедельник", value: 1 },
-  { label: "вторник", value: 2 },
-  { label: "среда", value: 3 },
-  { label: "четверг", value: 4 },
-  { label: "пятница", value: 5 },
-  { label: "суббота", value: 6 },
+  { label: "ПН", value: 1 },
+  { label: "ВТ", value: 2 },
+  { label: "СР", value: 3 },
+  { label: "ЧТ", value: 4 },
+  { label: "ПТ", value: 5 },
+  { label: "СБ", value: 6 },
 ];
 
 const lessons = [1, 2, 3, 4, 5, 6];
@@ -18,99 +19,131 @@ const weekTypeMap = {
   all: "Любая",
 };
 
-export async function ScheduleGrid({ weekType }: { weekType: WeekType }) {
-  const schedule = await getSchedule(weekType);
+export async function ScheduleGrid({
+  weekType,
+  subgroup,
+}: {
+  weekType: WeekType;
+  subgroup: "1" | "2" | "all";
+}) {
+  const schedule = await getSchedule(weekType, subgroup);
 
   if (!schedule.length) {
-    return <div>Расписание не найдено.</div>;
+    return (
+      <div className="rounded-xl border border-outline-variant/10 bg-surface-container-high p-6 text-on-surface-variant">
+        Расписание не найдено.
+      </div>
+    );
   }
 
   return (
-    <div>
-      <h2>Дни недели</h2>
-
-      <div className="flex gap-5">
-        {weekdays.map((day) => {
-          const dayEntries = schedule.filter(
-            (entry) => entry.weekday === day.value,
-          );
-
-          return (
-            <div key={day.value} className="border-2">
-              <p>{day.label}</p>
-              <ScheduleDayColumn dayEntries={dayEntries} />
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function ScheduleDayColumn({ dayEntries }: { dayEntries: ScheduleEntry[] }) {
-  return (
-    <div className="p-3">
-      {lessons.map((lessonNumber) => {
-        const slotEntries = dayEntries.filter(
-          (entry) => entry.lessonNumber === lessonNumber,
-        );
+    <section className="grid grid-cols-1 gap-6 md:grid-cols-2  xl:grid-cols-3">
+      {weekdays.map((day) => {
+        const dayEntries = schedule
+          .filter((entry) => entry.weekday === day.value)
+          .sort((a, b) => a.lessonNumber - b.lessonNumber);
 
         return (
-          <div key={lessonNumber} className="border border-amber-300 ">
-            <ScheduleLessonSlot entries={slotEntries} />
-          </div>
+          <ScheduleDayColumn
+            key={day.value}
+            dayLabel={day.label}
+            dayNumber={day.value}
+            dayEntries={dayEntries}
+          />
         );
       })}
-    </div>
+    </section>
   );
 }
 
-function ScheduleLessonSlot({ entries }: { entries: ScheduleEntry[] }) {
-  const lessonForAll = entries.find((entry) => entry.subgroup === "all");
-
-  if (lessonForAll) {
-    return <ScheduleLessonCard lesson={lessonForAll} />;
-  }
-
-  const firstSubgroupLesson = entries.find((entry) => entry.subgroup === "1");
-  const secondSubgroupLesson = entries.find((entry) => entry.subgroup === "2");
-
+function ScheduleDayColumn({
+  dayLabel,
+  dayNumber,
+  dayEntries,
+}: {
+  dayLabel: string;
+  dayNumber: number;
+  dayEntries: ScheduleEntry[];
+}) {
   return (
-    <div>
-      {firstSubgroupLesson ? (
-        <ScheduleLessonCard lesson={firstSubgroupLesson} />
-      ) : (
-        <div>Окно</div>
-      )}
+    <section className="relative min-w-0">
+      <header className="mb-6">
+        <p className="mb-1 text-xs font-bold tracking-[0.2em] text-on-surface-variant uppercase">
+          {dayLabel}
+        </p>
+        <p className="font-headline text-4xl font-bold leading-none text-on-surface">
+          {dayNumber}
+        </p>
+      </header>
 
-      {secondSubgroupLesson ? (
-        <ScheduleLessonCard lesson={secondSubgroupLesson} />
-      ) : (
-        <div>Окно</div>
-      )}
-    </div>
+      <div className="absolute inset-y-20 left-0 right-0 border-x border-outline-variant/5 pointer-events-none" />
+
+      <div className="relative z-10 space-y-4">
+        {dayEntries.length ? (
+          dayEntries.map((lesson) => (
+            <ScheduleLessonCard
+              key={
+                lesson.id ??
+                `${lesson.weekday}-${lesson.lessonNumber}-${lesson.subjectName}`
+              }
+              lesson={lesson}
+            />
+          ))
+        ) : (
+          <div className="rounded-xl border border-dashed border-outline-variant/15 bg-surface-container-high/40 p-4 text-sm text-on-surface-variant">
+            Нет занятий
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
 
 function ScheduleLessonCard({ lesson }: { lesson: ScheduleEntry }) {
+  const startTime = lesson.startTime.slice(0, 5);
+  const endTime = lesson.endTime.slice(0, 5);
+
+  let typeClasses = "bg-secondary-container text-on-secondary-container";
+
+  switch (lesson.type) {
+    case "ПЗ":
+      typeClasses = "bg-practice/15 text-practice";
+      break;
+    case "ЛБ":
+      typeClasses = "bg-lab/15 text-lab";
+      break;
+    case "ЛК":
+      typeClasses = "bg-lecture/15 text-lecture";
+      break;
+  }
+
   return (
-    <div>
-      <header>
-        <p>{lesson.type}</p>
-        <p>
-          {lesson.startTime} -- {lesson.endTime}
+    <article className="group min-w-0 rounded-2xl border border-outline-variant/10 bg-surface-container-high p-4 transition-all duration-200 hover:border-primary/30 hover:bg-surface-variant">
+      <header className="mb-4 flex items-start justify-between gap-3">
+        <p className="text-[11px] font-bold text-on-surface-variant">
+          {startTime} — {endTime}
         </p>
+
+        <span
+          className={[
+            "shrink-0 rounded-md px-2 py-1 text-[10px] font-bold leading-none",
+            typeClasses,
+          ].join(" ")}
+        >
+          {lesson.type}
+        </span>
       </header>
 
-      <div>
-        <p>{lesson.room}</p>
-        <p>{lesson.subjectName}</p>
-      </div>
+      <div className="min-w-0 space-y-2">
+        <p className="truncate font-headline text-[28px] leading-tight font-bold text-on-surface transition-colors group-hover:text-primary sm:text-lg">
+          {lesson.subjectName}
+        </p>
 
-      <footer>
-        <p>{lesson.subgroup === "all" ? "" : lesson.subgroup}</p>
-        <p>Неделя {weekTypeMap[lesson.weekType]}</p>
-      </footer>
-    </div>
+        <div className="flex items-center gap-2 text-sm text-on-surface-variant">
+          <MapPin className="h-4 w-4 shrink-0" />
+          <span className="truncate">{lesson.room}</span>
+        </div>
+      </div>
+    </article>
   );
 }
