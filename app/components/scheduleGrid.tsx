@@ -22,9 +22,11 @@ const weekTypeMap = {
 export async function ScheduleGrid({
   weekType,
   subgroup,
+  isAdmin = false,
 }: {
   weekType: WeekType;
   subgroup: "1" | "2" | "all";
+  isAdmin?: boolean;
 }) {
   const schedule = await getSchedule(weekType, subgroup);
 
@@ -49,6 +51,7 @@ export async function ScheduleGrid({
             dayLabel={day.label}
             dayNumber={day.value}
             dayEntries={dayEntries}
+            isAdmin={isAdmin}
           />
         );
       })}
@@ -60,10 +63,12 @@ function ScheduleDayColumn({
   dayLabel,
   dayNumber,
   dayEntries,
+  isAdmin,
 }: {
   dayLabel: string;
   dayNumber: number;
   dayEntries: ScheduleEntry[];
+  isAdmin: boolean;
 }) {
   return (
     <section className="relative min-w-0">
@@ -79,21 +84,30 @@ function ScheduleDayColumn({
       <div className="absolute inset-y-20 left-0 right-0 border-x border-outline-variant/5 pointer-events-none" />
 
       <div className="relative z-10 space-y-4">
-        {dayEntries.length ? (
-          dayEntries.map((lesson) => (
-            <ScheduleLessonCard
-              key={
-                lesson.id ??
-                `${lesson.weekday}-${lesson.lessonNumber}-${lesson.subjectName}`
-              }
-              lesson={lesson}
-            />
-          ))
-        ) : (
+        {!isAdmin && dayEntries.length === 0 && (
           <div className="rounded-xl border border-dashed border-outline-variant/15 bg-surface-container-high/40 p-4 text-sm text-on-surface-variant">
             Нет занятий
           </div>
         )}
+        {lessons.map((number) => {
+          const lesson = dayEntries.find(
+            (entry) => entry.lessonNumber === number,
+          );
+
+          if (lesson) {
+            return <ScheduleLessonCard key={lesson.id} lesson={lesson} />;
+          }
+
+          if (isAdmin) {
+            return (
+              <EmptyLessonSlot
+                key={number}
+                dayNumber={dayNumber}
+                lessonNumber={number}
+              />
+            );
+          }
+        })}
       </div>
     </section>
   );
@@ -145,5 +159,19 @@ function ScheduleLessonCard({ lesson }: { lesson: ScheduleEntry }) {
         </div>
       </div>
     </article>
+  );
+}
+
+function EmptyLessonSlot({
+  dayNumber,
+  lessonNumber,
+}: {
+  dayNumber: number;
+  lessonNumber: number;
+}) {
+  return (
+    <button className="w-full rounded-xl border border-dashed border-primary/30 p-4 text-sm text-primary transition hover:bg-primary/5">
+      + Добавить пару
+    </button>
   );
 }
