@@ -26,7 +26,7 @@ export function NavList({ onClick }: { onClick: () => void }) {
   const pathname = usePathname();
 
   return (
-    <nav className="space-y-1">
+    <nav>
       <ul className="list-none flex flex-col gap-1">
         {links.map((link) => {
           const isActive =

@@ -11,7 +11,11 @@ export function getInfoParam({
   );
 }
 
-export function parseInfoParam(info: string): InfoParam | null {
+export function parseInfoParam(info: string | null): InfoParam | null {
+  if (!info) {
+    return null;
+  }
+
   try {
     return JSON.parse(atob(info));
   } catch {
