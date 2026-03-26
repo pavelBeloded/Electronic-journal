@@ -1,9 +1,10 @@
 import { SubgroupType, WeekType } from "@/lib/types";
 import { Suspense } from "react";
-import { ScheduleGrid } from "@/app/components/scheduleGrid";
+import { ScheduleGrid } from "@/app/components/schedule/scheduleGrid";
 import { redirect } from "next/navigation";
 import { ToggleButton } from "@/app/components/toggleButton";
 import { cookies } from "next/headers";
+import { ScheduleLoadingFallback } from "@/app/components/schedule/scheduleLoadingFallback";
 
 const VALID_WEEKS: WeekType[] = ["odd", "even"];
 const VALID_SUBGROUPS: SubgroupType[] = ["1", "2"];
@@ -44,7 +45,11 @@ export default async function Schedule({
 
   const normalizedQuery = `?weekType=${weekType}&subgroup=${subgroup}`;
 
-  if (params.weekType !== weekType || params.subgroup !== subgroup) {
+  const hasInvalidParams =
+    (params.weekType && params.weekType !== weekType) ||
+    (params.subgroup && params.subgroup !== subgroup);
+
+  if (hasInvalidParams) {
     redirect(`/admin/schedule${normalizedQuery}`);
   }
 
@@ -78,16 +83,7 @@ export default async function Schedule({
       </header>
 
       <main className="p-10">
-        <Suspense
-          fallback={
-            <div className="flex h-screen items-center justify-center">
-              <div className="flex flex-col items-center gap-4">
-                <div className="h-8 w-8 animate-spin rounded-full border-2 border-outline-variant border-t-primary" />
-                <p className="text-sm text-on-surface-variant">Будим БД</p>
-              </div>
-            </div>
-          }
-        >
+        <Suspense fallback={<ScheduleLoadingFallback />}>
           <ScheduleGrid
             weekType={weekType}
             subgroup={subgroup}

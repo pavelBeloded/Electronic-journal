@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback } from "react";
 
 interface Props {
   values: {
@@ -27,17 +28,19 @@ export function ToggleButton({ values, param, cookieName }: Props) {
   const leftToggle = values.first.value;
   const rightToggle = values.second.value;
 
+  const handleSetValue = useCallback(
+    (value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(param, value);
+      document.cookie = `${cookieName}=${value}; path=/; max-age=31536000; samesite=lax`;
+      router.replace(`${pathname}?${params.toString()}`);
+    },
+    [searchParams, param, cookieName, pathname, router],
+  );
+
   if (activeToggle !== leftToggle && activeToggle !== rightToggle) {
     return <button>Ошибка</button>;
   }
-
-  const handleSetValue = (value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set(param, value);
-    document.cookie = `${cookieName}=${value}; path=/; max-age=31536000; samesite=lax`;
-
-    router.replace(`${pathname}?${params.toString()}`);
-  };
 
   return (
     <div className="flex rounded-lg border border-outline-variant/10 bg-surface-container-lowest p-1">

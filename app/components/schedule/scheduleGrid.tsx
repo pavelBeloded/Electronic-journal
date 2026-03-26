@@ -1,6 +1,8 @@
 import { ScheduleEntry, WeekType } from "@/lib/types";
 import { getSchedule } from "@/lib/dal";
 import { MapPin } from "lucide-react";
+import { AddLessonSlot } from "@/app/components/schedule/addLessonSlot";
+import { LESSON_TIMES } from "@/lib/constants/schedule";
 
 const weekdays = [
   { label: "ПН", value: 1 },
@@ -11,13 +13,7 @@ const weekdays = [
   { label: "СБ", value: 6 },
 ];
 
-const lessons = [1, 2, 3, 4, 5, 6];
-
-const weekTypeMap = {
-  odd: "Нечетная",
-  even: "Четная",
-  all: "Любая",
-};
+const lessons = LESSON_TIMES.map((_, i) => i + 1);
 
 export async function ScheduleGrid({
   weekType,
@@ -100,10 +96,12 @@ function ScheduleDayColumn({
 
           if (isAdmin) {
             return (
-              <EmptyLessonSlot
+              <AddLessonSlot
                 key={number}
-                dayNumber={dayNumber}
+                weekday={dayNumber}
                 lessonNumber={number}
+                defaultEndTime={LESSON_TIMES[number - 1].end}
+                defaultStartTime={LESSON_TIMES[number - 1].start}
               />
             );
           }
@@ -159,19 +157,5 @@ function ScheduleLessonCard({ lesson }: { lesson: ScheduleEntry }) {
         </div>
       </div>
     </article>
-  );
-}
-
-function EmptyLessonSlot({
-  dayNumber,
-  lessonNumber,
-}: {
-  dayNumber: number;
-  lessonNumber: number;
-}) {
-  return (
-    <button className="w-full rounded-xl border border-dashed border-primary/30 p-4 text-sm text-primary transition hover:bg-primary/5">
-      + Добавить пару
-    </button>
   );
 }

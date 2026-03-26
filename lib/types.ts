@@ -21,3 +21,10 @@ export interface LinkType {
   title: string;
   icon: React.ComponentType<{ className?: string }>;
 }
+
+export interface InfoParam {
+  weekday: number;
+  lessonNumber: number;
+  defaultStartTime: string;
+  defaultEndTime: string;
+}

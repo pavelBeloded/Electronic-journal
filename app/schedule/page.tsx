@@ -1,6 +1,6 @@
 import { SubgroupType, WeekType } from "@/lib/types";
 import { Suspense } from "react";
-import { ScheduleGrid } from "@/app/components/scheduleGrid";
+import { ScheduleGrid } from "@/app/components/schedule/scheduleGrid";
 import { redirect } from "next/navigation";
 import { ToggleButton } from "@/app/components/toggleButton";
 import { cookies } from "next/headers";
