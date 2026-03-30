@@ -4,3 +4,12 @@ export const LESSON_TIMES = [
   { start: "18:00", end: "19:25" },
   { start: "19:35", end: "21:00" },
 ] as const;
+
+export const WEEKDAY_LABELS: Record<number, string> = {
+  1: "Понедельник",
+  2: "Вторник",
+  3: "Среда",
+  4: "Четверг",
+  5: "Пятница",
+  6: "Суббота",
+};

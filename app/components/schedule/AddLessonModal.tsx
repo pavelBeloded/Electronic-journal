@@ -1,217 +1,207 @@
 "use client";
 
-import { X } from "lucide-react";
-import { SubgroupType, WeekType } from "@/lib/types";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { parseInfoParam } from "@/lib/utils";
+import {
+  useActionState,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  createScheduleEntryAction,
+  CreateScheduleEntryActionState,
+} from "@/app/actions/schedule";
+import { ResultPopup } from "@/app/components/popup";
+import {
+  FormField,
+  FormHeader,
+} from "@/app/components/schedule/form/formComponents";
+import { WEEKDAY_LABELS } from "@/lib/constants/schedule";
 
-type AddLessonModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  weekday: number;
-  lessonNumber: number;
-  defaultStartTime: string;
-  defaultEndTime: string;
-  defaultWeekType?: WeekType;
-  defaultSubgroup?: SubgroupType;
+// --- Constants ---
+
+const INITIAL_STATE: CreateScheduleEntryActionState = {
+  ok: false,
+  message: "",
 };
 
-const weekdayMap: Record<number, string> = {
-  1: "Понедельник",
-  2: "Вторник",
-  3: "Среда",
-  4: "Четверг",
-  5: "Пятница",
-  6: "Суббота",
-};
+const FIELD_CLASS =
+  "w-full rounded-xl border border-outline-variant/20 bg-surface-container-high px-4 py-2 text-on-surface outline-none transition focus:border-primary";
 
-export function AddLessonModal(
-  {
-    // isOpen,
-    // onClose,
-    // weekday,
-    // lessonNumber,
-    // defaultStartTime,
-    // defaultEndTime,
-    // defaultWeekType = "all",
-    // defaultSubgroup = "all",
-  }: AddLessonModalProps,
-) {
-  if (!isOpen) return null;
+function useModalControls(setPopunOpen: (state: boolean) => void) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
+  const modal = searchParams.get("modal");
+  const modalKey = searchParams.toString();
+
+  const searchParamsRef = useRef(searchParams);
+  useEffect(() => {
+    searchParamsRef.current = searchParams;
+  });
+
+  const onClose = useCallback(() => {
+    setPopunOpen(false);
+    const params = new URLSearchParams(searchParamsRef.current.toString());
+    params.delete("info");
+    params.delete("modal");
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [pathname, router, setPopunOpen]);
+
+  return { modal, modalKey, searchParams, onClose };
+}
+
+export function AddLessonModal() {
+  const [state, formAction, isPending] = useActionState(
+    createScheduleEntryAction,
+    INITIAL_STATE,
+  );
+  const [popupOpen, setPopupOpen] = useState(false);
+
+  const { modal, modalKey, searchParams, onClose } =
+    useModalControls(setPopupOpen);
+
+  useEffect(() => {
+    if (state.ok) onClose();
+  }, [state.ok, onClose]);
+  if (modal !== "addLesson") return null;
+
+  const info = parseInfoParam(searchParams.get("info"));
+  if (!info) {
+    setPopupOpen(false);
+    return null;
+  }
+
+  const weekdayLabel = WEEKDAY_LABELS[info.weekday] ?? "День не указан";
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="w-full w-100 max-w-xl rounded-2xl border border-outline-variant/20 bg-surface-container p-6 shadow-2xl"
+        className="flex w-full max-w-md flex-col gap-5 rounded-2xl bg-surface-container p-5 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="mb-6 flex items-start justify-between gap-4">
-          <div>
-            <h2 className="font-headline text-2xl font-bold text-on-surface">
-              Добавить пару
-            </h2>
-            <p className="mt-1 text-sm text-on-surface-variant">
-              {weekdayMap[weekday] ?? `День ${weekday}`} · {lessonNumber} пара
-            </p>
+        <FormHeader
+          weekdayLabel={weekdayLabel}
+          lessonNumber={info.lessonNumber}
+        />
+
+        <form key={modalKey} action={formAction}>
+          <input type="hidden" name="weekday" value={info.weekday} />
+          <input type="hidden" name="lessonNumber" value={info.lessonNumber} />
+          <input type="hidden" name="groupName" value={info.groupName} />
+
+          <div className="mb-5 grid gap-5 sm:grid-cols-2">
+            <FormField label="Название">
+              <input
+                type="text"
+                name="subjectName"
+                placeholder="Базы Данных"
+                className={FIELD_CLASS}
+                required
+              />
+            </FormField>
+
+            <FormField label="Время начала">
+              <input
+                type="time"
+                name="startTime"
+                defaultValue={info.defaultStartTime}
+                className={FIELD_CLASS}
+              />
+            </FormField>
+
+            <FormField label="Время конца">
+              <input
+                type="time"
+                name="endTime"
+                defaultValue={info.defaultEndTime}
+                className={FIELD_CLASS}
+              />
+            </FormField>
+
+            <FormField label="Аудитория">
+              <input
+                type="text"
+                name="room"
+                placeholder="Например: 200-3а"
+                className={FIELD_CLASS}
+                required
+              />
+            </FormField>
           </div>
 
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-lg p-2 text-on-surface-variant transition hover:bg-surface-variant hover:text-on-surface"
-            aria-label="Закрыть модалку"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-
-        <form className="space-y-5">
-          <input type="hidden" name="weekday" value={weekday} />
-          <input type="hidden" name="lessonNumber" value={lessonNumber} />
-
-          <div className="grid gap-5 sm:grid-cols-2">
-            <div className="sm:col-span-2">
-              <label
-                htmlFor="subjectName"
-                className="mb-2 block text-sm font-medium text-on-surface"
-              >
-                Название предмета
-              </label>
-              <input
-                id="subjectName"
-                name="subjectName"
-                type="text"
-                placeholder="Например, ОАиП"
-                className="w-full rounded-xl border border-outline-variant/20 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition focus:border-primary"
-                autoFocus
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="room"
-                className="mb-2 block text-sm font-medium text-on-surface"
-              >
-                Аудитория
-              </label>
-              <input
-                id="room"
-                name="room"
-                type="text"
-                placeholder="Например, 301-4"
-                className="w-full rounded-xl border border-outline-variant/20 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition focus:border-primary"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="type"
-                className="mb-2 block text-sm font-medium text-on-surface"
-              >
-                Тип пары
-              </label>
-              <select
-                id="type"
-                name="type"
-                defaultValue="ЛК"
-                className="w-full rounded-xl border border-outline-variant/20 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition focus:border-primary"
-              >
+          <div className="grid gap-5 sm:grid-cols-3">
+            <FormField label="Тип">
+              <select name="type" className={FIELD_CLASS}>
                 <option value="ЛК">ЛК</option>
                 <option value="ПЗ">ПЗ</option>
                 <option value="ЛБ">ЛБ</option>
               </select>
-            </div>
+            </FormField>
 
-            <div>
-              <label
-                htmlFor="startTime"
-                className="mb-2 block text-sm font-medium text-on-surface"
-              >
-                Начало
-              </label>
-              <input
-                id="startTime"
-                name="startTime"
-                type="time"
-                defaultValue={defaultStartTime}
-                className="w-full rounded-xl border border-outline-variant/20 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition focus:border-primary"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="endTime"
-                className="mb-2 block text-sm font-medium text-on-surface"
-              >
-                Конец
-              </label>
-              <input
-                id="endTime"
-                name="endTime"
-                type="time"
-                defaultValue={defaultEndTime}
-                className="w-full rounded-xl border border-outline-variant/20 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition focus:border-primary"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="weekType"
-                className="mb-2 block text-sm font-medium text-on-surface"
-              >
-                Неделя
-              </label>
+            <FormField label="Неделя">
               <select
-                id="weekType"
                 name="weekType"
-                defaultValue={defaultWeekType}
-                className="w-full rounded-xl border border-outline-variant/20 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition focus:border-primary"
+                className={FIELD_CLASS}
+                defaultValue="all"
               >
-                <option value="all">Любая</option>
-                <option value="odd">Нечётная</option>
-                <option value="even">Чётная</option>
+                <option value="all">Каждая</option>
+                {info.weekType === "odd" && <option value="odd">1</option>}
+                {info.weekType === "even" && <option value="even">2</option>}
               </select>
-            </div>
+            </FormField>
 
-            <div>
-              <label
-                htmlFor="subgroup"
-                className="mb-2 block text-sm font-medium text-on-surface"
-              >
-                Подгруппа
-              </label>
+            <FormField label="Подгруппа">
               <select
-                id="subgroup"
                 name="subgroup"
-                defaultValue={defaultSubgroup}
-                className="w-full rounded-xl border border-outline-variant/20 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition focus:border-primary"
+                className={FIELD_CLASS}
+                defaultValue="all"
               >
                 <option value="all">Все</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
+                {info.subgroup === "1" && <option value="1">1</option>}
+                {info.subgroup === "2" && <option value="2">2</option>}
               </select>
-            </div>
+            </FormField>
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-2">
+          <div className="flex flex-col-reverse gap-3 border-t border-outline-variant/10 pt-5 sm:flex-row sm:justify-end">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-xl border border-outline-variant/20 px-4 py-2 text-on-surface transition hover:bg-surface-variant"
+              className="inline-flex h-11 items-center justify-center rounded-xl border border-outline-variant/20 bg-surface-container px-5 text-sm font-medium text-on-surface transition hover:bg-surface-container-high"
             >
               Отмена
             </button>
 
             <button
               type="submit"
-              className="rounded-xl bg-primary px-4 py-2 font-medium text-on-primary transition hover:opacity-90"
+              disabled={isPending}
+              onClick={() => {
+                setPopupOpen(true);
+              }}
+              className="inline-flex h-11 items-center justify-center rounded-xl bg-primary px-5 text-sm font-semibold text-on-primary transition hover:opacity-90"
             >
-              Сохранить
+              {isPending ? "Сохраняем..." : "Сохранить занятие"}
             </button>
           </div>
         </form>
       </div>
+
+      <ResultPopup
+        open={popupOpen}
+        message={state.message}
+        ok={state.ok}
+        onClose={() => {
+          if (state.ok) {
+            onClose();
+          }
+        }}
+      />
     </div>
   );
 }

@@ -17,7 +17,7 @@ export default async function Schedule({
     (params.weekType && params.weekType !== weekType) ||
     (params.subgroup && params.subgroup !== subgroup);
 
-  if (hasInvalidParams) {
+  if (hasInvalidParams || !params.subgroup || !params.weekType) {
     redirect(`/schedule?weekType=${weekType}&subgroup=${subgroup}`);
   }
 
