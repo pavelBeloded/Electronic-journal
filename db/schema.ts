@@ -57,7 +57,7 @@ export const subjects = pgTable("subjects", {
 export const scheduleEntries = pgTable("schedule_entries", {
   id: uuid("id").defaultRandom().primaryKey(),
 
-  type: text("type"),
+  type: text("type").notNull(),
 
   groupId: uuid("group_id")
     .notNull()
@@ -76,7 +76,7 @@ export const scheduleEntries = pgTable("schedule_entries", {
   startTime: time("start_time").notNull(),
   endTime: time("end_time").notNull(),
 
-  room: text("room"),
+  room: text("room").notNull(),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

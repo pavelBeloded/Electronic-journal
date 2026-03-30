@@ -11,8 +11,8 @@ export default function Error({ reset }: { reset: () => void }) {
           Попробуйте обновить страницу или повторить действие
         </p>
         <p className="mb-6 text-sm text-on-surface-variant">
-          P.S. Если ни перезагрузка ни перезаход не помогли, сайт лег. Можете
-          написать мне в ТГ @ddedmorozzz
+          P.S. Если ни перезагрузка ни перезаход, ни включение интернета не
+          помогли, сайт лег. Можете написать мне в ТГ @ddedmorozzz
         </p>
 
         <button

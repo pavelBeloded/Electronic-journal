@@ -1,6 +1,8 @@
 import { ScheduleEntry, WeekType } from "@/lib/types";
 import { getSchedule } from "@/lib/dal";
 import { MapPin } from "lucide-react";
+import { AddLessonSlot } from "@/app/components/schedule/addLessonSlot";
+import { LESSON_TIMES } from "@/lib/constants/schedule";
 
 const weekdays = [
   { label: "ПН", value: 1 },
@@ -11,20 +13,16 @@ const weekdays = [
   { label: "СБ", value: 6 },
 ];
 
-const lessons = [1, 2, 3, 4, 5, 6];
-
-const weekTypeMap = {
-  odd: "Нечетная",
-  even: "Четная",
-  all: "Любая",
-};
+const lessons = LESSON_TIMES.map((_, i) => i + 1);
 
 export async function ScheduleGrid({
   weekType,
   subgroup,
+  isAdmin = false,
 }: {
   weekType: WeekType;
   subgroup: "1" | "2" | "all";
+  isAdmin?: boolean;
 }) {
   const schedule = await getSchedule(weekType, subgroup);
 
@@ -49,6 +47,7 @@ export async function ScheduleGrid({
             dayLabel={day.label}
             dayNumber={day.value}
             dayEntries={dayEntries}
+            isAdmin={isAdmin}
           />
         );
       })}
@@ -60,10 +59,12 @@ function ScheduleDayColumn({
   dayLabel,
   dayNumber,
   dayEntries,
+  isAdmin,
 }: {
   dayLabel: string;
   dayNumber: number;
   dayEntries: ScheduleEntry[];
+  isAdmin: boolean;
 }) {
   return (
     <section className="relative min-w-0">
@@ -79,21 +80,32 @@ function ScheduleDayColumn({
       <div className="absolute inset-y-20 left-0 right-0 border-x border-outline-variant/5 pointer-events-none" />
 
       <div className="relative z-10 space-y-4">
-        {dayEntries.length ? (
-          dayEntries.map((lesson) => (
-            <ScheduleLessonCard
-              key={
-                lesson.id ??
-                `${lesson.weekday}-${lesson.lessonNumber}-${lesson.subjectName}`
-              }
-              lesson={lesson}
-            />
-          ))
-        ) : (
+        {!isAdmin && dayEntries.length === 0 && (
           <div className="rounded-xl border border-dashed border-outline-variant/15 bg-surface-container-high/40 p-4 text-sm text-on-surface-variant">
             Нет занятий
           </div>
         )}
+        {lessons.map((number) => {
+          const lesson = dayEntries.find(
+            (entry) => entry.lessonNumber === number,
+          );
+
+          if (lesson) {
+            return <ScheduleLessonCard key={lesson.id} lesson={lesson} />;
+          }
+
+          if (isAdmin) {
+            return (
+              <AddLessonSlot
+                key={number}
+                weekday={dayNumber}
+                lessonNumber={number}
+                defaultEndTime={LESSON_TIMES[number - 1].end}
+                defaultStartTime={LESSON_TIMES[number - 1].start}
+              />
+            );
+          }
+        })}
       </div>
     </section>
   );

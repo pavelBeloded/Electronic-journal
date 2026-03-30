@@ -4,6 +4,7 @@ import { ScheduleGrid } from "@/app/components/schedule/scheduleGrid";
 import { ScheduleHeader } from "@/app/components/schedule/ScheduleHeader";
 import { ScheduleLoadingFallback } from "@/app/components/schedule/scheduleLoadingFallback";
 import { resolveScheduleParams } from "@/lib/scheduleParams";
+import { AddLessonModal } from "@/app/components/schedule/AddLessonModal";
 
 export default async function Schedule({
   searchParams,
@@ -18,15 +19,21 @@ export default async function Schedule({
     (params.subgroup && params.subgroup !== subgroup);
 
   if (hasInvalidParams || !params.subgroup || !params.weekType) {
-    redirect(`/schedule?weekType=${weekType}&subgroup=${subgroup}`);
+    redirect(`/admin/schedule?weekType=${weekType}&subgroup=${subgroup}`);
   }
 
   return (
     <>
+      <AddLessonModal />
+
       <ScheduleHeader />
       <main className="p-10">
         <Suspense fallback={<ScheduleLoadingFallback />}>
-          <ScheduleGrid weekType={weekType} subgroup={subgroup} />
+          <ScheduleGrid
+            weekType={weekType}
+            subgroup={subgroup}
+            isAdmin={true}
+          />
         </Suspense>
       </main>
     </>
