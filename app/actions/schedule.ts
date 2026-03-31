@@ -40,7 +40,7 @@ export async function createScheduleEntryAction(
     };
   }
 
-  revalidateTag("schedule-data", "max");
+  updateTag("schedule-data");
 
   return {
     ok: true,
