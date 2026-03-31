@@ -25,17 +25,11 @@ const labelByAction: Record<ConfirmActions, string> = {
 };
 
 export function Dialog({ open, title, text, actions, onAction }: DialogProps) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted || !open) return null;
+  if (!open) return null;
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/55 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-100 flex items-center justify-center bg-black/55 p-4 backdrop-blur-sm"
       onClick={() => onAction("cancel")}
     >
       <div
