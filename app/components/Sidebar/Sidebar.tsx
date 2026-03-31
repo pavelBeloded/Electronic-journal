@@ -2,6 +2,8 @@
 
 import { LogOut } from "lucide-react";
 import { NavList } from "@/app/components/Sidebar/NavList";
+import { usePathname } from "next/navigation";
+import { logOut } from "@/app/actions/auth";
 
 export function Sidebar({
   className,
@@ -12,6 +14,9 @@ export function Sidebar({
   open: boolean;
   setOpenAction: (open: boolean) => void;
 }) {
+  const pathname = usePathname();
+  const isAdmin = pathname.includes("/admin");
+
   return (
     <aside
       className={[
@@ -33,10 +38,15 @@ export function Sidebar({
         <NavList onClick={() => setOpenAction(false)} />
       </section>
       <section className="mt-auto pt-6">
-        <button className="flex w-full items-center gap-3 rounded-md px-4 py-2 text-on-surface-variant transition-all duration-200 hover:bg-surface-container hover:text-on-surface">
-          <LogOut className="h-5 w-5" />
-          <span>Выйти</span>
-        </button>
+        {isAdmin && (
+          <button
+            onClick={logOut}
+            className="flex w-full items-center gap-3 rounded-md px-4 py-2 text-on-surface-variant transition-all duration-200 hover:bg-surface-container hover:text-on-surface"
+          >
+            <LogOut className="h-5 w-5" />
+            <span>Выйти</span>
+          </button>
+        )}
       </section>
     </aside>
   );
