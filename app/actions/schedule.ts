@@ -1,8 +1,8 @@
 "use server";
 
 import { CreateScheduleEntryInput } from "@/lib/types";
-import { createScheduleEntry } from "@/lib/dal";
-import { revalidateTag } from "next/cache";
+import { createScheduleEntry, deleteScheduleEntry } from "@/lib/dal";
+import { revalidateTag, updateTag } from "next/cache";
 
 export type CreateScheduleEntryActionState = {
   ok: boolean;
@@ -47,4 +47,14 @@ export async function createScheduleEntryAction(
     message: result.message ?? "Пара успешно создана",
     createdId: result.data.id,
   };
+}
+
+export async function deleteScheduleEntryAction(entryId: string) {
+  const result = await deleteScheduleEntry(entryId);
+
+  if (result.ok) {
+    updateTag("schedule-data");
+  }
+
+  return result;
 }

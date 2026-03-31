@@ -198,6 +198,28 @@ export async function getSubjectId(
   }
 }
 
+export async function deleteScheduleEntry(
+  id: string,
+): Promise<ActionResult<string>> {
+  const deleted = await db
+    .delete(scheduleEntries)
+    .where(eq(scheduleEntries.id, id))
+    .returning();
+
+  if (deleted.length === 0) {
+    return {
+      ok: false,
+      message: "Запись не найдена",
+    };
+  }
+
+  return {
+    ok: true,
+    message: "Успешно!",
+    data: deleted[0].id,
+  };
+}
+
 export async function createSubject(
   subjectName: string,
 ): Promise<ActionResult<string>> {
