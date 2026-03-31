@@ -84,7 +84,14 @@ function ScheduleDayColumn({
           );
 
           if (lesson) {
-            return <ScheduleLessonCard key={lesson.id} lesson={lesson} />;
+            console.log("NO admin: " + isAdmin);
+            return (
+              <ScheduleLessonCard
+                key={lesson.id}
+                lesson={lesson}
+                isAdmin={isAdmin}
+              />
+            );
           }
 
           if (isAdmin) {
@@ -104,7 +111,13 @@ function ScheduleDayColumn({
   );
 }
 
-function ScheduleLessonCard({ lesson }: { lesson: ScheduleEntry }) {
+function ScheduleLessonCard({
+  lesson,
+  isAdmin,
+}: {
+  lesson: ScheduleEntry;
+  isAdmin: boolean;
+}) {
   const startTime = lesson.startTime.slice(0, 5);
   const endTime = lesson.endTime.slice(0, 5);
 
@@ -150,7 +163,7 @@ function ScheduleLessonCard({ lesson }: { lesson: ScheduleEntry }) {
             <span className="truncate">{lesson.room}</span>
           </div>
         </div>
-        <DeleteButton entryId={lesson.id} />
+        {isAdmin && <DeleteButton entryId={lesson.id} />}
       </div>
     </article>
   );
