@@ -3,7 +3,7 @@
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { createAdminSession } from "@/lib/sessions";
+import { createAdminSession, deleteAdminSession } from "@/lib/sessions";
 
 export type ActionResponse = {
   success: boolean;
@@ -48,25 +48,25 @@ export async function signIn(
   }
 
   if (login !== adminLogin) {
-    console.log("login " + adminLogin);
-
     return {
       success: false,
-      message: "Неверный логин или пароль",
+      message: "Неверный логин",
     };
   }
 
   const isPasswordValid = await bcrypt.compare(password, adminPasswordHash);
 
   if (!isPasswordValid) {
-    console.log("password " + isPasswordValid);
-    console.log(adminPasswordHash);
     return {
       success: false,
       message: "Неверный логин или пароль",
     };
   }
-
   await createAdminSession();
   redirect("/admin");
+}
+
+export async function logOut() {
+  await deleteAdminSession();
+  redirect(`/admin`);
 }

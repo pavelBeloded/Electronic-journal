@@ -3,6 +3,7 @@ import { getSchedule } from "@/lib/dal";
 import { MapPin } from "lucide-react";
 import { AddLessonSlot } from "@/app/components/schedule/addLessonSlot";
 import { LESSON_TIMES } from "@/lib/constants/schedule";
+import { DeleteButton } from "@/app/components/schedule/deleteButton";
 
 const weekdays = [
   { label: "ПН", value: 1 },
@@ -25,14 +26,6 @@ export async function ScheduleGrid({
   isAdmin?: boolean;
 }) {
   const schedule = await getSchedule(weekType, subgroup);
-
-  if (!schedule.length) {
-    return (
-      <div className="rounded-xl border border-outline-variant/10 bg-surface-container-high p-6 text-on-surface-variant">
-        Расписание не найдено.
-      </div>
-    );
-  }
 
   return (
     <section className="grid grid-cols-1 gap-6 md:grid-cols-2  xl:grid-cols-3">
@@ -146,15 +139,18 @@ function ScheduleLessonCard({ lesson }: { lesson: ScheduleEntry }) {
         </span>
       </header>
 
-      <div className="min-w-0 space-y-2">
-        <p className="truncate font-headline text-[28px] leading-tight font-bold text-on-surface transition-colors group-hover:text-primary sm:text-lg">
-          {lesson.subjectName}
-        </p>
+      <div className="min-w-0 flex justify-between items-end">
+        <div className="space-y-2 ">
+          <p className="truncate font-headline text-[28px] leading-tight font-bold text-on-surface transition-colors group-hover:text-primary sm:text-lg">
+            {lesson.subjectName}
+          </p>
 
-        <div className="flex items-center gap-2 text-sm text-on-surface-variant">
-          <MapPin className="h-4 w-4 shrink-0" />
-          <span className="truncate">{lesson.room}</span>
+          <div className="flex items-center gap-2 text-sm text-on-surface-variant">
+            <MapPin className="h-4 w-4 shrink-0" />
+            <span className="truncate">{lesson.room}</span>
+          </div>
         </div>
+        <DeleteButton entryId={lesson.id} />
       </div>
     </article>
   );

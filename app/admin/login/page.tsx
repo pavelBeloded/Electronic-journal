@@ -30,7 +30,7 @@ export default function LoginPage() {
               type="text"
               autoComplete="username"
               disabled={isPending}
-              className="rounded-md bg-surface-container-high px-3 py-2 outline outline-1 outline-outline-variant"
+              className="rounded-md bg-surface-container-high px-3 py-2 outline-1 outline-outline-variant"
             />
             {state.errors?.login?.[0] && (
               <p className="text-sm text-red-500">{state.errors.login[0]}</p>
@@ -45,7 +45,7 @@ export default function LoginPage() {
               type="password"
               autoComplete="current-password"
               disabled={isPending}
-              className="rounded-md bg-surface-container-high px-3 py-2 outline outline-1 outline-outline-variant"
+              className="rounded-md bg-surface-container-high px-3 py-2 outline-1 outline-outline-variant"
             />
             {state.errors?.password?.[0] && (
               <p className="text-sm text-red-500">{state.errors.password[0]}</p>
