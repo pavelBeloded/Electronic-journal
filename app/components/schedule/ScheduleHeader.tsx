@@ -2,13 +2,15 @@ import { ToggleButton } from "@/app/components/toggleButton";
 
 export function ScheduleHeader() {
   return (
-    <header className="flex items-center gap-4 bg-surface-container-low px-8 py-4">
-      <div className="flex items-center">
-        <p className="font-headline text-2xl font-bold">Расписание занятий</p>
+    <header className="overflow-x-auto md:overflow-x-hidden sticky top-14 md:top-0 z-30 flex items-center gap-4 bg-surface-container-low px-8  py-4">
+      <div className="md:flex items-center hidden">
+        <p className="font-headline text-xl font-bold lg:text-2xl">
+          Расписание занятий
+        </p>
         <div className="ml-4 h-8 w-px bg-surface-variant" />
       </div>
 
-      <div className="ml-auto flex items-center gap-3">
+      <div className="ml-auto flex items-center gap-3 ">
         <ToggleButton
           param="weekType"
           cookieName="scheduleWeekType"

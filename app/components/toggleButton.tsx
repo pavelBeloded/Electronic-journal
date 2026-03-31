@@ -48,7 +48,7 @@ export function ToggleButton({ values, param, cookieName }: Props) {
         onClick={() => handleSetValue(leftToggle)}
         disabled={activeToggle === leftToggle}
         className={[
-          "rounded px-3 py-1 text-xs font-medium transition-colors",
+          "rounded px-3 py-1 text-xs font-medium whitespace-nowrap transition-colors",
           activeToggle === leftToggle
             ? "bg-surface-variant text-on-surface"
             : "text-on-surface-variant hover:text-on-surface",
@@ -61,7 +61,7 @@ export function ToggleButton({ values, param, cookieName }: Props) {
         onClick={() => handleSetValue(rightToggle)}
         disabled={activeToggle === rightToggle}
         className={[
-          "rounded px-3 py-1 text-xs font-medium transition-colors",
+          "rounded px-3 py-1 text-xs font-medium whitespace-nowrap transition-colors",
           activeToggle === rightToggle
             ? "bg-surface-variant text-on-surface"
             : "text-on-surface-variant hover:text-on-surface",
