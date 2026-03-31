@@ -9,7 +9,7 @@ export default function SidebarWrapper() {
 
   return (
     <>
-      <div className="fixed inset-x-0 top-0 z-30 flex h-14 items-center border-b border-outline-variant bg-surface/95 px-4 backdrop-blur md:hidden">
+      <div className="fixed inset-x-0 top-0 z-40 flex h-14 items-center border-b border-outline-variant bg-surface/95 px-4 backdrop-blur md:hidden">
         <SideBarToggle setOpenAction={setOpen} />
         <span className="ml-3 font-headline text-lg font-semibold text-on-surface">
           Schedify
