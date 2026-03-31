@@ -61,7 +61,7 @@ function ScheduleDayColumn({
 }) {
   return (
     <section className="relative min-w-0">
-      <header className="mb-6">
+      <header className="sticky top-15 z-35 md:static mb-6">
         <p className="mb-1 text-xs font-bold tracking-[0.2em] text-on-surface-variant uppercase">
           {dayLabel}
         </p>
@@ -125,13 +125,13 @@ function ScheduleLessonCard({ lesson }: { lesson: ScheduleEntry }) {
   return (
     <article className="group min-w-0 rounded-2xl border border-outline-variant/10 bg-surface-container-high p-4 transition-all duration-200 hover:border-primary/30 hover:bg-surface-variant">
       <header className="mb-4 flex items-start justify-between gap-3">
-        <p className="text-[11px] font-bold text-on-surface-variant">
+        <p className="text-xs md:text-sm font-bold text-on-surface-variant">
           {startTime} — {endTime}
         </p>
 
         <span
           className={[
-            "shrink-0 rounded-md px-2 py-1 text-[10px] font-bold leading-none",
+            "shrink-0 rounded-md px-2 py-1 text-xs font-bold leading-none",
             typeClasses,
           ].join(" ")}
         >
@@ -141,7 +141,7 @@ function ScheduleLessonCard({ lesson }: { lesson: ScheduleEntry }) {
 
       <div className="min-w-0 flex justify-between items-end">
         <div className="space-y-2 ">
-          <p className="truncate font-headline text-[28px] leading-tight font-bold text-on-surface transition-colors group-hover:text-primary sm:text-lg">
+          <p className="truncate font-headline text-xl  sm:text-2xl lg:text-3xl leading-tight font-bold text-on-surface transition-colors group-hover:text-primary">
             {lesson.subjectName}
           </p>
 

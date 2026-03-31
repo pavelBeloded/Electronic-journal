@@ -28,7 +28,9 @@ export default function RootLayout({
         className={`${inter.variable} ${manrope.variable} bg-surface text-on-surface antialiased`}
       >
         <SidebarWrapper />
-        <main className="ml-0 min-h-screen md:ml-68">{children}</main>
+        <main className="ml-0 min-h-screen pt-14 md:ml-68 md:pt-0">
+          {children}
+        </main>
       </body>
     </html>
   );

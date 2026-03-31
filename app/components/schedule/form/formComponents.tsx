@@ -8,12 +8,10 @@ export function FormHeader({
   lessonNumber: number;
 }) {
   return (
-    <div>
-      <div className="flex items-center justify-between">
-        <h2 className="mb-4 text-xl font-bold text-on-primary-container">
-          Добавить пару
-        </h2>
-      </div>
+    <div className="space-y-1">
+      <h2 className="text-xl font-bold text-on-surface sm:text-2xl">
+        Добавить пару
+      </h2>
       <p className="text-sm text-on-surface-variant">
         {weekdayLabel} · {lessonNumber} пара
       </p>
@@ -28,10 +26,8 @@ interface FormFieldProps {
 
 export function FormField({ label, children }: FormFieldProps) {
   return (
-    <label className="block">
-      <span className="mb-2 block text-sm font-medium text-on-surface">
-        {label}
-      </span>
+    <label className="block space-y-2">
+      <span className="block text-sm font-medium text-on-surface">{label}</span>
       {children}
     </label>
   );
