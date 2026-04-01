@@ -1,4 +1,5 @@
 import { ToggleButton } from "@/app/components/toggleButton";
+import { getCurrentWeekType } from "@/lib/utils";
 
 export function ScheduleHeader() {
   return (
@@ -18,6 +19,7 @@ export function ScheduleHeader() {
             first: { value: "odd", title: "Нечетная" },
             second: { value: "even", title: "Четная" },
           }}
+          current={getCurrentWeekType()}
         />
         <ToggleButton
           param="subgroup"

@@ -16,9 +16,10 @@ interface Props {
   };
   param: string;
   cookieName: string;
+  current?: string;
 }
 
-export function ToggleButton({ values, param, cookieName }: Props) {
+export function ToggleButton({ values, param, cookieName, current }: Props) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -33,7 +34,7 @@ export function ToggleButton({ values, param, cookieName }: Props) {
       const params = new URLSearchParams(searchParams.toString());
       params.set(param, value);
       document.cookie = `${cookieName}=${value}; path=/; max-age=31536000; samesite=lax`;
-      router.replace(`${pathname}?${params.toString()}`);
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     },
     [searchParams, param, cookieName, pathname, router],
   );
@@ -52,6 +53,7 @@ export function ToggleButton({ values, param, cookieName }: Props) {
           activeToggle === leftToggle
             ? "bg-surface-variant text-on-surface"
             : "text-on-surface-variant hover:text-on-surface",
+          leftToggle === current && "text-tertiary",
         ].join(" ")}
       >
         {values.first.title}
@@ -65,6 +67,7 @@ export function ToggleButton({ values, param, cookieName }: Props) {
           activeToggle === rightToggle
             ? "bg-surface-variant text-on-surface"
             : "text-on-surface-variant hover:text-on-surface",
+          rightToggle === current && "text-tertiary",
         ].join(" ")}
       >
         {values.second.title}
