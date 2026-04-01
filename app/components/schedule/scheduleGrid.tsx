@@ -4,6 +4,7 @@ import { MapPin } from "lucide-react";
 import { AddLessonSlot } from "@/app/components/schedule/addLessonSlot";
 import { LESSON_TIMES } from "@/lib/constants/schedule";
 import { DeleteButton } from "@/app/components/schedule/deleteButton";
+import { getLessonStatus } from "@/lib/utils";
 
 const weekdays = [
   { label: "ПН", value: 1 },
@@ -40,6 +41,7 @@ export async function ScheduleGrid({
             dayLabel={day.label}
             dayNumber={day.value}
             dayEntries={dayEntries}
+            weekType={weekType}
             isAdmin={isAdmin}
           />
         );
@@ -53,15 +55,17 @@ function ScheduleDayColumn({
   dayNumber,
   dayEntries,
   isAdmin,
+  weekType,
 }: {
   dayLabel: string;
   dayNumber: number;
   dayEntries: ScheduleEntry[];
   isAdmin: boolean;
+  weekType: WeekType;
 }) {
   return (
     <section className="relative min-w-0">
-      <header className="sticky top-15 z-35 md:static mb-6">
+      <header className="w-fit top-15 z-35 md:static mb-6">
         <p className="mb-1 text-xs font-bold tracking-[0.2em] text-on-surface-variant uppercase">
           {dayLabel}
         </p>
@@ -84,12 +88,13 @@ function ScheduleDayColumn({
           );
 
           if (lesson) {
-            console.log("NO admin: " + isAdmin);
             return (
               <ScheduleLessonCard
                 key={lesson.id}
                 lesson={lesson}
                 isAdmin={isAdmin}
+                weekday={dayNumber}
+                weekType={weekType}
               />
             );
           }
@@ -114,14 +119,31 @@ function ScheduleDayColumn({
 function ScheduleLessonCard({
   lesson,
   isAdmin,
+  weekday,
+  weekType,
 }: {
   lesson: ScheduleEntry;
   isAdmin: boolean;
+  weekday: number;
+  weekType: WeekType;
 }) {
   const startTime = lesson.startTime.slice(0, 5);
   const endTime = lesson.endTime.slice(0, 5);
+  const status = getLessonStatus(
+    lesson.startTime,
+    lesson.endTime,
+    weekday,
+    weekType,
+  );
 
   let typeClasses = "bg-secondary-container text-on-secondary-container";
+
+  const statusClasses = {
+    current: "border-primary/60 bg-primary/5 shadow-sm shadow-primary/20",
+    upcoming: "border-secondary/40",
+    past: "opacity-50",
+    none: "",
+  }[status];
 
   switch (lesson.type) {
     case "ПЗ":
@@ -136,7 +158,21 @@ function ScheduleLessonCard({
   }
 
   return (
-    <article className="group min-w-0 rounded-2xl border border-outline-variant/10 bg-surface-container-high p-4 transition-all duration-200 hover:border-primary/30 hover:bg-surface-variant">
+    <article
+      className={`group min-w-0 rounded-2xl border border-outline-variant/10 bg-surface-container-high p-4 transition-all duration-200 hover:border-primary/30 hover:bg-surface-variant ${statusClasses}`}
+    >
+      {status === "current" && (
+        <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-primary">
+          <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+          Идёт сейчас
+        </div>
+      )}
+      {status === "upcoming" && (
+        <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-tertiary">
+          <span className="h-1.5 w-1.5 rounded-full bg-on-tertiary-container animate-pulse" />
+          Следующая
+        </div>
+      )}
       <header className="mb-4 flex items-start justify-between gap-3">
         <p className="text-xs md:text-sm font-bold text-on-surface-variant">
           {startTime} — {endTime}

@@ -22,7 +22,6 @@ export function AddLessonSlot({
   const pathname = usePathname();
 
   const handleClick = () => {
-    console.log("Click");
     const params = new URLSearchParams(searchParams.toString());
     const subgroup = params.get("subgroup") as SubgroupType;
     const weekType = params.get("weekType") as WeekType;

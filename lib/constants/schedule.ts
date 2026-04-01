@@ -13,3 +13,6 @@ export const WEEKDAY_LABELS: Record<number, string> = {
   5: "Пятница",
   6: "Суббота",
 };
+
+export const UNIVERSITY_TIMEZONE = "Europe/Minsk";
+export type LessonStatus = "current" | "upcoming" | "past" | "none";

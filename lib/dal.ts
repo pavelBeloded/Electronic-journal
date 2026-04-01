@@ -136,8 +136,6 @@ export async function createScheduleEntry(
       return groupIdResult;
     }
 
-    console.log("subgroup: ", subgroup);
-
     const conflictCheck = await checkSlotConflict(
       groupIdResult.data,
       weekday,
@@ -146,7 +144,6 @@ export async function createScheduleEntry(
       subgroup,
     );
     if (!conflictCheck.ok) {
-      console.log("conflict zone");
       return conflictCheck;
     }
 
@@ -320,7 +317,6 @@ async function checkSlotConflict(
         .map((c) => `подгруппа ${c.subgroup}, неделя ${c.weekType}`)
         .join("; ");
 
-      console.log("heeerer");
       return {
         ok: false,
         message: `Конфликт расписания: слот уже занят (${details})`,
@@ -328,8 +324,7 @@ async function checkSlotConflict(
     }
 
     return { ok: true, data: undefined };
-  } catch (error) {
-    console.error("checkSlotConflict error:", error);
+  } catch {
     return { ok: false, message: "Ошибка проверки конфликтов расписания" };
   }
 }
