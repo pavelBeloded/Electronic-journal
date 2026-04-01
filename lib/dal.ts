@@ -102,8 +102,8 @@ export async function createScheduleEntry(
     };
   }
 
-  if (!["ЛБ", "ПЗ", "ЛК"].includes(type)) {
-    return { ok: false, message: "Неверный тип пары (ЛБ/ПЗ/ЛК)" };
+  if (!["ЛР", "ПЗ", "ЛК"].includes(type)) {
+    return { ok: false, message: "Неверный тип пары (ЛР/ПЗ/ЛК)" };
   }
 
   if (lessonNumber < 1 || lessonNumber > LESSON_TIMES.length) {

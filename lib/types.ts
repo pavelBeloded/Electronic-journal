@@ -36,7 +36,7 @@ export type CreateScheduleEntryInput = {
   subgroup: "all" | "1" | "2";
   startTime: string;
   endTime: string;
-  type: "ЛБ" | "ПЗ" | "ЛК";
+  type: "ЛР" | "ПЗ" | "ЛК";
   lessonNumber: number;
   weekday: number;
   weekType: "all" | "even" | "odd";

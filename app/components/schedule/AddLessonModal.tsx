@@ -163,7 +163,7 @@ export function AddLessonModal() {
                     <select name="type" className={FIELD_CLASS}>
                       <option value="ЛК">ЛК</option>
                       <option value="ПЗ">ПЗ</option>
-                      <option value="ЛБ">ЛБ</option>
+                      <option value="ЛР">ЛР</option>
                     </select>
                   </FormField>
 

@@ -53,7 +53,7 @@ export function ToggleButton({ values, param, cookieName, current }: Props) {
           activeToggle === leftToggle
             ? "bg-surface-variant text-on-surface"
             : "text-on-surface-variant hover:text-on-surface",
-          leftToggle === current && "text-tertiary",
+          leftToggle === current && "text-primary",
         ].join(" ")}
       >
         {values.first.title}
@@ -67,7 +67,7 @@ export function ToggleButton({ values, param, cookieName, current }: Props) {
           activeToggle === rightToggle
             ? "bg-surface-variant text-on-surface"
             : "text-on-surface-variant hover:text-on-surface",
-          rightToggle === current && "text-tertiary",
+          rightToggle === current && "text-primary",
         ].join(" ")}
       >
         {values.second.title}
