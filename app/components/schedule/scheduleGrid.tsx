@@ -4,7 +4,7 @@ import { MapPin } from "lucide-react";
 import { AddLessonSlot } from "@/app/components/schedule/addLessonSlot";
 import { LESSON_TIMES } from "@/lib/constants/schedule";
 import { DeleteButton } from "@/app/components/schedule/deleteButton";
-import { getLessonStatus } from "@/lib/utils";
+import { getCurrentWeekday, getLessonStatus } from "@/lib/utils";
 
 const weekdays = [
   { label: "ПН", value: 1 },
@@ -27,6 +27,7 @@ export async function ScheduleGrid({
   isAdmin?: boolean;
 }) {
   const schedule = await getSchedule(weekType, subgroup);
+  const currentWeekday = getCurrentWeekday();
 
   return (
     <section className="grid grid-cols-1 gap-6 md:grid-cols-2  xl:grid-cols-3">
@@ -43,6 +44,7 @@ export async function ScheduleGrid({
             dayEntries={dayEntries}
             weekType={weekType}
             isAdmin={isAdmin}
+            isCurrent={currentWeekday === day.value}
           />
         );
       })}
@@ -56,12 +58,14 @@ function ScheduleDayColumn({
   dayEntries,
   isAdmin,
   weekType,
+  isCurrent,
 }: {
   dayLabel: string;
   dayNumber: number;
   dayEntries: ScheduleEntry[];
   isAdmin: boolean;
   weekType: WeekType;
+  isCurrent: boolean;
 }) {
   return (
     <section className="relative min-w-0">
@@ -69,7 +73,9 @@ function ScheduleDayColumn({
         <p className="mb-1 text-xs font-bold tracking-[0.2em] text-on-surface-variant uppercase">
           {dayLabel}
         </p>
-        <p className="font-headline text-4xl font-bold leading-none text-on-surface">
+        <p
+          className={`font-headline text-4xl font-bold leading-none  ${isCurrent ? "text-primary text-shadow-primary text-shadow-xs" : "text-on-surface"}`}
+        >
           {dayNumber}
         </p>
       </header>
@@ -149,7 +155,7 @@ function ScheduleLessonCard({
     case "ПЗ":
       typeClasses = "bg-practice/15 text-practice";
       break;
-    case "ЛБ":
+    case "ЛР":
       typeClasses = "bg-lab/15 text-lab";
       break;
     case "ЛК":
