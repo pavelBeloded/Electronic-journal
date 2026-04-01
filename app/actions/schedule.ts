@@ -19,7 +19,7 @@ export async function createScheduleEntryAction(
     subgroup: String(formData.get("subgroup") ?? "all") as "all" | "1" | "2",
     startTime: String(formData.get("startTime") ?? ""),
     endTime: String(formData.get("endTime") ?? ""),
-    type: String(formData.get("type") ?? "") as "ЛБ" | "ПЗ" | "ЛК",
+    type: String(formData.get("type") ?? "") as "ЛР" | "ПЗ" | "ЛК",
     lessonNumber: Number(formData.get("lessonNumber") ?? 0),
     weekday: Number(formData.get("weekday") ?? 0),
     weekType: String(formData.get("weekType") ?? "all") as
